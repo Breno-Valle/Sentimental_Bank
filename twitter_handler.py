@@ -1,4 +1,6 @@
 import tweepy
+import pickle
+from os.path import exists
 
 with open('keys_twitter.txt', 'r') as keys:
     consumer_key = keys.readline().strip('\n')
@@ -14,7 +16,23 @@ api = tweepy.API(auth)
 query = '#Ciência' + " -filter:retweets"
 tweets = tweepy.Cursor(api.search_tweets,
                         q=query,
-                        lang='pt').items(20)
+                        tweet_mode='extended',
+                        lang='pt').items(6)
 
-for tweet in tweets:
-    print(tweet.text)
+
+
+with open('arquivo', 'w+b') as arq:
+    tw_dict ={'date': [], 'text': [], 'number_followers':[]}
+    for tweet in tweets:
+        text = tweet.full_text.encode('utf-8')
+        date = str(tweet.created_at).encode('utf-8')
+        number_followers= str(tweet.user._json["followers_count"]).encode('utf-8')
+        tw_dict['date'].append(date)
+        tw_dict['text'].append(text)
+        tw_dict['number_followers'].append(number_followers)
+    pickle.dump(tw_dict, arq)
+
+     
+
+
+
