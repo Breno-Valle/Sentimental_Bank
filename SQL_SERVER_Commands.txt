@@ -1,0 +1,20 @@
+-- to create the data bank in MS SQL Server
+
+CREATE DATABASE dbSentimental_Bank;
+
+-- to create a table to save the mais stats of research
+
+CREATE TABLE tb_Stats_Science (
+	Query_id INT IDENTITY(1,1) PRIMARY KEY,
+	Followers_total INT,
+	Followers_mean FLOAT,
+	Followers_stdev FLOAT,
+	Friends_total INT,
+	Friends_mean FLOAT,
+	Friends_stdev FLOAT
+	)
+
+-- when i realized that i nedded the query's moment i added it
+
+ALTER TABLE tb_Stats_Science
+ADD Time_Of_Query TIME;
