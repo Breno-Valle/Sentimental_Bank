@@ -82,7 +82,13 @@ friends_mean = metrics.friends_mean()
 friends_stdev = metrics.friends_stdev()
 day = metrics.day_of_year()
 
-string = f"INSERT INTO {'tb_Stats_Science'} (Followers_total, Followers_mean, Followers_stdev, Friends_total, Friends_mean,Friends_stdev, Time_Of_Query) VALUES ({followers_total}, {followers_mean}, {followers_stdev}, {friends_total}, {friends_mean}, {friends_stdev}, '{day[0]}')"
+
+class Query:
+    def __init__(self, table_name):
+        self.create_table = "CREATE TABLE {table_name} (Query_id INT IDENTITY(1,1) PRIMARY KEY, Followers_total INT, Followers_mean FLOAT, Followers_stdev FLOAT, Friends_total INT, Friends_mean FLOAT, Friends_stdev FLOAT)"
+        self.save = f"INSERT INTO {table_name} (Followers_total, Followers_mean, Followers_stdev, Friends_total, Friends_mean,Friends_stdev, Time_Of_Query) VALUES ({followers_total}, {followers_mean}, {followers_stdev}, {friends_total}, {friends_mean}, {friends_stdev}, '{day[0]}')"
+        self.see_all = f"SELECT *  FROM {table_name}"
+
 
 conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=DESKTOP-HL3J42P\SQLEXPRESS;'
@@ -90,7 +96,7 @@ conn = pyodbc.connect('Driver={SQL Server};'
                       'Trusted_Connection=yes;')
 
 cursor = conn.cursor()
-cursor.execute(string)
-cursor.commit()
-cursor.execute('SELECT *  FROM tb_Stats_Science')
+#cursor.execute(string)
+#cursor.commit()
+cursor.execute(Query('tb_Stats_Science').see_all)
 print(cursor.fetchall())
