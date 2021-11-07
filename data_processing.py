@@ -108,8 +108,9 @@ def try_connect():
         except:
             print('Table does not exists')
     except:
-        print('Unaable to connet with requested database')
+        print('Unable to connet with requested database')
 
 test = try_connect()
+print('--------------test-----------------')
 print(test)
 
