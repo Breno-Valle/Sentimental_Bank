@@ -17,4 +17,4 @@ CREATE TABLE tb_Stats_Science (
 -- when i realized that i nedded the query's moment i added it
 
 ALTER TABLE tb_Stats_Science
-ADD Time_Of_Query TIME;
+ADD Time_Of_Query DATE;
