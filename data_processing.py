@@ -90,13 +90,26 @@ class Query:
         self.see_all = f"SELECT *  FROM {table_name}"
 
 
-conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=DESKTOP-HL3J42P\SQLEXPRESS;'
-                      'Database=dbSentimental_Bank;'
-                      'Trusted_Connection=yes;')
+def try_connect():
+    try:
+        conn = pyodbc.connect('Driver={SQL Server};'
+                              'Server=DESKTOP-HL3J42P\SQLEXPRESS;'
+                              'Database=dbSentimental_Bank;'
+                              'Trusted_Connection=yes;')
 
-cursor = conn.cursor()
-#cursor.execute(string)
-#cursor.commit()
-cursor.execute(Query('tb_Stats_Science').see_all)
-print(cursor.fetchall())
+        cursor = conn.cursor()
+        try:
+            #cursor.execute(string)
+            #cursor.commit()
+            cursor.execute(Query('tb_Stats_Science').see_all)
+            cursor.fetchone()
+            cursor.close()
+            return 'JOB DONE'
+        except:
+            print('Table does not exists')
+    except:
+        print('Unaable to connet with requested database')
+
+test = try_connect()
+print(test)
+
