@@ -82,6 +82,8 @@ friends_mean = metrics.friends_mean()
 friends_stdev = metrics.friends_stdev()
 day = metrics.day_of_year()
 
+print('---------day-----------')
+print(day[0])
 
 class Query:
     def __init__(self, table_name):
@@ -99,8 +101,8 @@ def try_connect():
 
         cursor = conn.cursor()
         try:
-            #cursor.execute(string)
-            #cursor.commit()
+            cursor.execute(Query('tb_Stats_Science').save)
+            cursor.commit()
             cursor.execute(Query('tb_Stats_Science').see_all)
             cursor.fetchone()
             cursor.close()
