@@ -74,16 +74,14 @@ class Find_Metrics:
 
 metrics =  Find_Metrics(tw_dict)
 
-followers_total = metrics.total_number_followers()
-followers_mean = metrics.followers_mean()
-followers_stdev = metrics.followers_stdev()
-friends_total = metrics.total_number_friends()
-friends_mean = metrics.friends_mean()
-friends_stdev = metrics.friends_stdev()
+followers_total = round(metrics.total_number_followers(), 4)
+followers_mean = round(metrics.followers_mean(), 4)
+followers_stdev = round(metrics.followers_stdev(), 4)
+friends_total = round(metrics.total_number_friends(),4)
+friends_mean = round(metrics.friends_mean(),4)
+friends_stdev = round(metrics.friends_stdev(),4)
 day = metrics.day_of_year()
 
-print('---------day-----------')
-print(day[0])
 
 class Query:
     def __init__(self, table_name):
@@ -101,8 +99,6 @@ def try_connect_db():
 
         cursor = conn.cursor()
         try:
-            cursor.execute(Query('tb_Stats_Science').save)
-            cursor.commit()
             cursor.execute(Query('tb_Stats_Science').see_all)
             cursor.fetchone()
             cursor.close()
@@ -121,7 +117,6 @@ def save_tb():
     cursor = conn.cursor()
     cursor.execute(Query('tb_Stats_Science').save)
     cursor.commit()
-    cursor.execute(Query('tb_Stats_Science').save)
     cursor.close()
 
 

@@ -26,7 +26,7 @@ def collect_tweets():
             tweets = tweepy.Cursor(api.search_tweets,
                                     q=query,
                                         tweet_mode='extended',
-                                    lang='pt').items(100)
+                                    lang='pt').items(30000)
 
 
             # saving data from tweets into a dictionary and than into an binary file
