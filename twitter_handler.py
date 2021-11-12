@@ -4,7 +4,7 @@ import tweepy
 import pickle
 
 # consume twitter login keys from a txt file
-with open('keys_twitter.txt', 'r') as keys:
+with open('files\keys_twitter.txt', 'r') as keys:
     consumer_key = keys.readline().strip('\n')
     consumer_secrets = keys.readline().strip('\n')
     access_token = keys.readline().strip('\n')
@@ -30,7 +30,7 @@ def collect_tweets():
 
 
             # saving data from tweets into a dictionary and than into an binary file
-            with open('arquivo', 'w+b') as arq:
+            with open('files\arquivo', 'w+b') as arq:
                 # creating an dict
                 tw_dict ={'date': [], 'text': [], 'number_followers':[], 'number_friends':[], 'location':[]}
                 # loop over tweets and get their atributes

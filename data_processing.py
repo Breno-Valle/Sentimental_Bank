@@ -10,7 +10,7 @@ spark = ps.sql.SparkSession.builder \
         .getOrCreate()
 sc = spark.sparkContext  
 
-path = r'C:\Users\Breno\Documents\ComputerScience\sentimental_bank\arquivo'
+path = r'C:\Users\Breno\Documents\ComputerScience\sentimental_bank\files\arquivo'
 
 with open(path, 'rb') as arq:
     tw_dict = pickle.load(arq)
@@ -120,3 +120,12 @@ def save_tb():
     cursor.close()
 
 
+def show_tb():
+    conn = pyodbc.connect('Driver={SQL Server};'
+                              'Server=DESKTOP-HL3J42P\SQLEXPRESS;'
+                              'Database=dbSentimental_Bank;'
+                              'Trusted_Connection=yes;')
+    cursor = conn.cursor()
+    cursor.execute(Query('tb_Stats_Science').see_all)
+    print(cursor.fetchall())
+    cursor.close()
