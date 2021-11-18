@@ -30,7 +30,7 @@ def collect_tweets():
 
 
             # saving data from tweets into a dictionary and than into an binary file
-            with open('files\arquivo', 'w+b') as arq:
+            with open(r'C:\Users\Breno\Documents\ComputerScience\sentimental_bank\files\arquivo', 'w+b') as arq:
                 # creating an dict
                 tw_dict ={'date': [], 'text': [], 'number_followers':[], 'number_friends':[], 'location':[]}
                 # loop over tweets and get their atributes

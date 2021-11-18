@@ -4,17 +4,22 @@ import pyspark as ps
 import pickle
 import pyodbc
 
+# initiating spark section
 spark = ps.sql.SparkSession.builder \
         .master('local[1]') \
         .appName('Sentimental-bank-processing') \
         .getOrCreate()
+# use spark section to init sparkContext
 sc = spark.sparkContext  
 
+# archive that contains twitter data collected in twitter_handler.py
 path = r'C:\Users\Breno\Documents\ComputerScience\sentimental_bank\files\arquivo'
 
+# load binary data with pickle lib
 with open(path, 'rb') as arq:
     tw_dict = pickle.load(arq)
 
+# class to process data with spark RDD
 class Find_Metrics:
     def __init__(self, dict):
         self.dict = dict
@@ -24,54 +29,63 @@ class Find_Metrics:
         self.location = [local for local in tw_dict['location']]
         
     def total_number_followers(self):
+        # total number of followers directed reached by the HashTag
         total = sc.parallelize(self.number_followers) \
                 .map(lambda x: int(x)) \
                 .sum()
         return total
     
     def followers_mean(self):
+        # averege number of followers that people who twitteted with this Hashtag
         mean = sc.parallelize(self.number_followers) \
                 .map(lambda x: int(x)) \
                 .mean()
         return mean
     
     def followers_stdev(self):
+        # find standard deviation from people who twitteted this hashtag
         stdev = sc.parallelize(self.number_followers) \
                 .map(lambda x: int(x)) \
                 .stdev()
         return stdev
     
     def total_number_friends(self):
+         # total number of friends directed reached by the HashTag
         total = sc.parallelize(self.number_friends) \
                 .map(lambda x: int(x)) \
                 .sum()
         return total
     
     def friends_mean(self):
+        # averege number of friends that people who twitteted with this hashtag 
         mean = sc.parallelize(self.number_friends) \
                 .map(lambda x: int(x)) \
                 .mean()
         return mean
     
     def friends_stdev(self):
+        # find standard deviation from people who twitteted this hashtag
         stdev = sc.parallelize(self.number_friends) \
                 .map(lambda x: int(x)) \
                 .stdev()
         return stdev
     
     def day_of_year(self):
+        # take data from the last tweet collected 
         day = sc.parallelize(self.date) \
                 .map(lambda x: x.decode('utf-8')[0:10]) \
                 .take(1)
         return day
     
     def city(self):
+        # save a list of cities and countrys from people who used Hashtag
         loc = sc.parallelize(self.location) \
                 .map(lambda x: x.decode('utf-8').lower()) \
                 .filter(lambda x: x != '') \
                 .collect()
         return loc
 
+# use functions created and save it in variables
 metrics =  Find_Metrics(tw_dict)
 
 followers_total = round(metrics.total_number_followers(), 4)
@@ -83,6 +97,7 @@ friends_stdev = round(metrics.friends_stdev(),4)
 day = metrics.day_of_year()
 
 
+# class to simplify use of SQL query when connecting to databank
 class Query:
     def __init__(self, table_name):
         self.create_table = "CREATE TABLE {table_name} (Query_id INT IDENTITY(1,1) PRIMARY KEY, Followers_total INT, Followers_mean FLOAT, Followers_stdev FLOAT, Friends_total INT, Friends_mean FLOAT, Friends_stdev FLOAT)"
@@ -90,6 +105,8 @@ class Query:
         self.see_all = f"SELECT *  FROM {table_name}"
 
 
+# funtion to try connect to databank using pyodbc lib
+# return TRUE if connetion works
 def try_connect_db():
     try:
         conn = pyodbc.connect('Driver={SQL Server};'
@@ -109,6 +126,7 @@ def try_connect_db():
         print('Unable to connet with requested database')
 
 
+# save twitter data processed by pyspark 
 def save_tb():
     conn = pyodbc.connect('Driver={SQL Server};'
                               'Server=DESKTOP-HL3J42P\SQLEXPRESS;'
@@ -120,6 +138,8 @@ def save_tb():
     cursor.close()
 
 
+
+# print all data saved in databank on screen
 def show_tb():
     conn = pyodbc.connect('Driver={SQL Server};'
                               'Server=DESKTOP-HL3J42P\SQLEXPRESS;'
